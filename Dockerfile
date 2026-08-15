@@ -42,10 +42,12 @@ RUN /venv/main/bin/python /opt/ltx-suite/scripts/install_nodes.py \
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
 COPY . /opt/ltx-suite
+COPY docker/ltx-suite.conf /etc/supervisor/conf.d/ltx-suite.conf
 RUN chmod +x /opt/ltx-suite/docker/start.sh \
     && /venv/main/bin/python /opt/ltx-suite/scripts/validate_project.py
 
 EXPOSE 1111/tcp 8188/tcp
 
-# Keep the ENTRYPOINT inherited from the Vast base image so Instance Portal/security stay available.
-CMD ["/opt/ltx-suite/docker/start.sh"]
+# Preserve the Vast.ai base ENTRYPOINT. The ltx-suite process is started by
+# supervisord from docker/ltx-suite.conf after the Instance Portal stack comes up.
+CMD []
