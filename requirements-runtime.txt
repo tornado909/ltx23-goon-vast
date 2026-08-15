@@ -1,0 +1,5 @@
+huggingface_hub[hf_xet]>=0.34.0
+requests>=2.32.0
+psutil>=6.0.0
+aiohttp>=3.10.0
+aiogram>=3.13.0

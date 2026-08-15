@@ -1,0 +1,152 @@
+[
+  {
+    "name": "ComfyUI-KJNodes",
+    "repo": "https://github.com/kijai/ComfyUI-KJNodes.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-LTXVideo",
+    "repo": "https://github.com/Lightricks/ComfyUI-LTXVideo.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-VideoHelperSuite",
+    "repo": "https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite.git",
+    "required": true
+  },
+  {
+    "name": "rgthree-comfy",
+    "repo": "https://github.com/rgthree/rgthree-comfy.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-Easy-Use",
+    "repo": "https://github.com/yolain/ComfyUI-Easy-Use.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-Custom-Scripts",
+    "repo": "https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git",
+    "required": true
+  },
+  {
+    "name": "ComfyLiterals",
+    "repo": "https://github.com/M1kep/ComfyLiterals.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-mxToolkit",
+    "repo": "https://github.com/Smirnov75/ComfyUI-mxToolkit.git",
+    "required": true
+  },
+  {
+    "name": "ControlAltAI-Nodes",
+    "repo": "https://github.com/gseth/ControlAltAI-Nodes.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-VFI",
+    "repo": "https://github.com/GACLove/ComfyUI-VFI.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-Krea2T-Enhancer",
+    "repo": "https://github.com/capitan01R/ComfyUI-Krea2T-Enhancer.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-ConditioningKrea2Rebalance",
+    "repo": "https://github.com/nova452/ComfyUI-ConditioningKrea2Rebalance.git",
+    "required": true
+  },
+  {
+    "name": "comfyui-int-and-float",
+    "repo": "https://github.com/danTheMonk/comfyui-int-and-float.git",
+    "required": true
+  },
+  {
+    "name": "comfyui-ollama",
+    "repo": "https://github.com/stavsap/comfyui-ollama.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-Impact-Pack",
+    "repo": "https://github.com/ltdrdata/ComfyUI-Impact-Pack.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-DaSiWa-Nodes",
+    "repo": "https://github.com/darksidewalker/ComfyUI-DaSiWa-Nodes.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-basic_data_handling",
+    "repo": "https://github.com/StableLlama/ComfyUI-basic_data_handling.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI_UltimateSDUpscale",
+    "repo": "https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git",
+    "required": true
+  },
+  {
+    "name": "ComfyMath",
+    "repo": "https://github.com/evanspearman/ComfyMath.git",
+    "required": true
+  },
+  {
+    "name": "CRT-Nodes",
+    "repo": "https://github.com/PGCRT/CRT-Nodes.git",
+    "required": true
+  },
+  {
+    "name": "10S-Comfy-nodes",
+    "repo": "https://github.com/TenStrip/10S-Comfy-nodes.git",
+    "required": true
+  },
+  {
+    "name": "ComfyUI-pause",
+    "repo": "https://github.com/wywywywy/ComfyUI-pause.git",
+    "required": false
+  },
+  {
+    "name": "SeedVR2_VideoUpscaler",
+    "repo": "https://github.com/numz/ComfyUI-SeedVR2_VideoUpscaler.git",
+    "required": false
+  },
+  {
+    "name": "ComfyUI_Fill-Nodes",
+    "repo": "https://github.com/filliptm/ComfyUI_Fill-Nodes.git",
+    "required": false
+  },
+  {
+    "name": "ComfyUI-ProPost",
+    "repo": "https://github.com/digitaljohn/comfyui-propost.git",
+    "required": false
+  },
+  {
+    "name": "Nvidia_RTX_Nodes_ComfyUI",
+    "repo": "https://github.com/Comfy-Org/Nvidia_RTX_Nodes_ComfyUI.git",
+    "required": false
+  },
+  {
+    "name": "ComfyUI-Optical-Realism",
+    "repo": "https://github.com/skatardude10/ComfyUI-Optical-Realism.git",
+    "required": false
+  },
+  {
+    "name": "ComfyUI-DepthAnythingV2",
+    "repo": "https://github.com/kijai/ComfyUI-DepthAnythingV2.git",
+    "required": false
+  },
+  {
+    "name": "ComfyUI-Manager",
+    "repo": "https://github.com/ltdrdata/ComfyUI-Manager.git",
+    "required": false
+  },
+  {
+    "name": "comfyui-workflow-to-api-converter-endpoint",
+    "repo": "https://github.com/SethRobinson/comfyui-workflow-to-api-converter-endpoint.git",
+    "required": true
+  }
+]

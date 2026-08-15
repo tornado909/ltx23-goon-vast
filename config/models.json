@@ -1,0 +1,152 @@
+[
+  {
+    "id": "10eros_full",
+    "provider": "hf",
+    "repo": "TenStrip/LTX2.3-10Eros",
+    "file": "10Eros_v1.4_fp8mixed_learned.safetensors",
+    "target": "checkpoints/10Eros_v1.4_fp8mixed_learned.safetensors",
+    "required": true,
+    "aliases": [
+      "diffusion_models/ltx/ltx2310eros_v14.safetensors"
+    ]
+  },
+  {
+    "id": "dmd_lora",
+    "provider": "hf",
+    "repo": "TenStrip/LTX2.3_DMD_Lora",
+    "file": "LTX2.3_DMD_reshaped_r256.safetensors",
+    "target": "loras/LTX/LTX2.3_DMD_reshaped_r256.safetensors",
+    "required": true,
+    "aliases": [
+      "loras/LTX2.3_DMD_reshaped_r256.safetensors"
+    ]
+  },
+  {
+    "id": "ltx_video_vae",
+    "provider": "hf",
+    "repo": "Kijai/LTX2.3_comfy",
+    "file": "vae/LTX23_video_vae_bf16.safetensors",
+    "target": "vae/ltx/LTX23_video_vae_bf16.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_audio_vae",
+    "provider": "hf",
+    "repo": "Kijai/LTX2.3_comfy",
+    "file": "vae/LTX23_audio_vae_bf16.safetensors",
+    "target": "vae/ltx/LTX23_audio_vae_bf16.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_projection",
+    "provider": "hf",
+    "repo": "Kijai/LTX2.3_comfy",
+    "file": "text_encoders/ltx-2.3_text_projection_bf16.safetensors",
+    "target": "text_encoders/ltx-2.3_text_projection_bf16.safetensors",
+    "required": true
+  },
+  {
+    "id": "gemma_encoder",
+    "provider": "hf",
+    "repo": "DreamFast/gemma-3-12b-it-heretic-v2",
+    "file": "comfyui/gemma-3-12b-it-heretic-v2_fp8_e4m3fn.safetensors",
+    "target": "text_encoders/gemma-3-12b-it-heretic-v2_fp8_e4m3fn.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_spatial_upscaler",
+    "provider": "hf",
+    "repo": "Lightricks/LTX-2.3",
+    "file": "ltx-2.3-spatial-upscaler-x2-1.1.safetensors",
+    "target": "latent_upscale_models/ltx-2.3-spatial-upscaler-x2-1.1.safetensors",
+    "required": true
+  },
+  {
+    "id": "qwen3vl_krea",
+    "provider": "hf",
+    "repo": "Kutches/Kr3a",
+    "file": "qwen3VLInstruct4bHeretic_v10.safetensors",
+    "target": "text_encoders/qwen3VLInstruct4bHeretic_v10.safetensors",
+    "required": true
+  },
+  {
+    "id": "wan_vae",
+    "provider": "hf",
+    "repo": "Comfy-Org/Wan_2.1_ComfyUI_repackaged",
+    "file": "split_files/vae/wan_2.1_vae.safetensors",
+    "target": "vae/wan_2.1_vae.safetensors",
+    "required": true
+  },
+  {
+    "id": "nmkd_upscaler",
+    "provider": "hf",
+    "repo": "gemasai/4x_NMKD-Siax_200k",
+    "file": "4x_NMKD-Siax_200k.pth",
+    "target": "upscale_models/4x_NMKD-Siax_200k.pth",
+    "required": true
+  },
+  {
+    "id": "krea_fallback",
+    "provider": "hf",
+    "repo": "Kutches/Kr3a",
+    "file": "krea2TurboUncensored_v1.safetensors",
+    "target": "diffusion_models/krea2/krea2TurboUncensored_v1.safetensors",
+    "required": true
+  },
+  {
+    "id": "famegrid",
+    "provider": "hf",
+    "repo": "Kutches/Kr3a",
+    "file": "Famegrid-Standard-Krea-2.safetensors",
+    "target": "loras/krea2/Famegrid Standard Krea 2.safetensors",
+    "required": true
+  },
+  {
+    "id": "krea_nsfw_plus",
+    "provider": "hf",
+    "repo": "Buattensorart2/dari_civitai",
+    "file": "krea2/Krea2 NSFW+.safetensors",
+    "target": "loras/krea2/Krea2 NSFW+.safetensors",
+    "required": true
+  },
+  {
+    "id": "nicegirls",
+    "provider": "hf",
+    "repo": "Kutches/Kr3a",
+    "file": "nicegirls_krea2.safetensors",
+    "target": "loras/krea2/nicegirls_krea2.safetensors",
+    "required": true
+  },
+  {
+    "id": "lenovo",
+    "provider": "hf",
+    "repo": "Kutches/Kr3a",
+    "file": "lenovo_krea2.safetensors",
+    "target": "loras/krea2/lenovo_krea2.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_deepthroat",
+    "provider": "hf",
+    "repo": "Sentinel7/ltxv",
+    "file": "2476698/2784573/ltxdeepthroat_v01.safetensors",
+    "target": "loras/LTX/ltxdeepthroat_v01.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_motion",
+    "provider": "hf",
+    "repo": "Sentinel7/ltxv",
+    "file": "2344781/2778953/LTX2.3-NSFWMOTION_00750.safetensors",
+    "target": "loras/LTX/LTX2.3-NSFWMOTION_00750.safetensors",
+    "required": true
+  },
+  {
+    "id": "ltx_dreamlay",
+    "provider": "hf",
+    "repo": "Sentinel7/ltxv",
+    "file": "1811313/2950842/DR34ML4Y_LTXXX_V2.safetensors",
+    "target": "loras/LTX/DR34ML4Y_LTXXX_V2.safetensors",
+    "required": true
+  }
+]
