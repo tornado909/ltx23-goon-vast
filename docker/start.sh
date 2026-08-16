@@ -33,7 +33,43 @@ trap cleanup_status EXIT
 
 "$PY" "$PROJECT_DIR/scripts/preflight.py"
 
-# Ollama is needed by the Goon workflow prompt-generation nodes.
+TG_PID=""
+start_telegram() {
+  local token="${TELEGRAM_BOT_TOKEN:-}"
+  echo "[telegram] token_present=$([[ -n "$token" ]] && echo yes || echo no) enable_flag=${ENABLE_TELEGRAM_BOT:-unset}"
+  if [[ -z "$token" ]]; then
+    echo "[telegram] not started: TELEGRAM_BOT_TOKEN is empty"
+    return 0
+  fi
+
+  local tg_http
+  tg_http=$(curl -sS -o /tmp/telegram-getme.json -w '%{http_code}' --connect-timeout 8 --max-time 15 \
+    "https://api.telegram.org/bot${token}/getMe" || true)
+  if [[ "$tg_http" != "200" ]] || ! jq -e '.ok == true' /tmp/telegram-getme.json >/dev/null 2>&1; then
+    echo "[telegram] ERROR: Telegram Bot API check failed (HTTP=${tg_http:-000}). Check token and host access to api.telegram.org"
+    return 0
+  fi
+
+  local username
+  username=$(jq -r '.result.username // "unknown"' /tmp/telegram-getme.json 2>/dev/null || echo unknown)
+  echo "[telegram] API OK: @${username}; starting polling worker now"
+  "$PY" "$PROJECT_DIR/bot/telegram_bot.py" >>"$LOG" 2>&1 &
+  TG_PID=$!
+  sleep 2
+  if ! kill -0 "$TG_PID" 2>/dev/null; then
+    echo "[telegram] ERROR: worker exited during startup"
+    wait "$TG_PID" || true
+    TG_PID=""
+  else
+    echo "[telegram] worker running pid=$TG_PID"
+  fi
+}
+
+# Start Telegram immediately, before the expensive model bootstrap. /start and /status
+# remain responsive while weights are downloading.
+start_telegram
+
+# Ollama is needed by the supplied Goon Machine workflow prompt-generation nodes.
 mkdir -p "$OLLAMA_MODELS"
 echo "[ollama] starting server"
 ollama serve >>"$LOG" 2>&1 &
@@ -53,13 +89,12 @@ echo "[bootstrap] all required assets are ready"
 echo "[bootstrap] workflows: $WORKSPACE_DIR/user/default/workflows"
 echo "[bootstrap] output:    $WORKSPACE_DIR/output"
 
-# Hand the same Portal URL over from the bootstrap page to ComfyUI.
 cleanup_status
 trap - EXIT
 sleep 1
 
 cd "$COMFYUI_DIR"
-ARGS=(main.py --listen 127.0.0.1 --port 18188 --disable-auto-launch --preview-method auto)
+ARGS=(main.py --listen 127.0.0.1 --port 18188 --disable-auto-launch --preview-method auto --enable-cors-header '*')
 if "$PY" main.py --help 2>&1 | grep -q -- '--reserve-vram'; then
   ARGS+=(--reserve-vram "${COMFY_RESERVE_VRAM:-2}")
 fi
@@ -68,7 +103,6 @@ echo "[comfyui] starting web UI on Portal tunnel"
 "$PY" "${ARGS[@]}" &
 COMFY_PID=$!
 
-# Wait until both ComfyUI and the workflow-converter endpoint are ready before starting Telegram.
 READY=0
 for i in $(seq 1 180); do
   if ! kill -0 "$COMFY_PID" 2>/dev/null; then
@@ -77,7 +111,6 @@ for i in $(seq 1 180); do
     exit 1
   fi
   if curl -fsS http://127.0.0.1:18188/system_stats >/dev/null 2>&1; then
-    # A POST with invalid data is expected to fail, but a non-404 response proves the route exists.
     HTTP=$(curl -s -o /dev/null -w '%{http_code}' -X POST -H 'Content-Type: application/json' \
       --data '{}' http://127.0.0.1:18188/workflow/convert || true)
     if [[ "$HTTP" != "000" && "$HTTP" != "404" ]]; then
@@ -92,20 +125,11 @@ if [[ "$READY" != "1" ]]; then
   echo "[comfyui] ERROR: ComfyUI or /workflow/convert did not become ready"
   kill "$COMFY_PID" 2>/dev/null || true
   wait "$COMFY_PID" 2>/dev/null || true
+  [[ -n "$TG_PID" ]] && kill "$TG_PID" 2>/dev/null || true
   exit 1
 fi
 
 echo "[comfyui] READY"
-TG_PID=""
-if [[ "${ENABLE_TELEGRAM_BOT:-0}" =~ ^(1|true|TRUE|yes|YES)$ ]]; then
-  if [[ -z "${TELEGRAM_BOT_TOKEN:-}" ]]; then
-    echo "[telegram] ENABLE_TELEGRAM_BOT=1 but TELEGRAM_BOT_TOKEN is empty; bot not started"
-  else
-    echo "[telegram] starting polling worker"
-    "$PY" "$PROJECT_DIR/bot/telegram_bot.py" >>"$LOG" 2>&1 &
-    TG_PID=$!
-  fi
-fi
 
 set +e
 wait "$COMFY_PID"
