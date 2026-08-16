@@ -13,6 +13,7 @@ exec > >(tee -a "$LOG") 2>&1
 
 echo "============================================================"
 echo " LTX 2.3 / 10Eros / Goon Machine - RTX 5090 bootstrap"
+echo " Build SHA: ${LTX_BUILD_SHA:-unknown}"
 echo " $(date -Is)"
 echo "============================================================"
 
