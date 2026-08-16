@@ -30,7 +30,7 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
-            type=raw,value=5090-v2
+            type=raw,value=5090-v3
             type=sha,prefix=sha-
       - uses: docker/build-push-action@v6
         with:
