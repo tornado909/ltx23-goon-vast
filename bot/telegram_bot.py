@@ -32,7 +32,7 @@ log = logging.getLogger("telegram-bot")
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
 if not TOKEN:
-    raise SystemExit("TELEGRAM_BOT_TOKEN is required when ENABLE_TELEGRAM_BOT=1")
+    raise SystemExit("TELEGRAM_BOT_TOKEN is required")
 
 COMFY_API = os.environ.get("COMFYUI_API_BASE", "http://127.0.0.1:18188")
 WORKFLOWS_DIR = Path(os.environ.get("COMFY_WORKFLOWS_DIR", "/workspace/user/default/workflows"))
@@ -45,7 +45,6 @@ BLOCK_NSFW_PHOTO = os.environ.get("TELEGRAM_BLOCK_NSFW_PHOTO", "1").lower() not 
 ALLOWED = {int(x) for x in os.environ.get("TELEGRAM_ALLOWED_USER_IDS", "").replace(" ", "").split(",") if x}
 QUEUE_LOCK = asyncio.Lock()
 
-# Safeguard for photo-to-video with a real-person image.
 EXPLICIT_RE = re.compile(r"\b(nsfw|sex|sexual|nude|naked|porn|blowjob|deepthroat|vagina|penis|cum|anal|oral|erotic|xxx)\b", re.I)
 
 bot = Bot(TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
@@ -63,6 +62,16 @@ def contains_explicit(text: str) -> bool:
     return bool(EXPLICIT_RE.search(text or ""))
 
 
+async def comfy_ready(message: Message) -> bool:
+    if await client.ping():
+        return True
+    await message.answer(
+        "Сервер ещё готовится: модели скачиваются или ComfyUI запускается. "
+        "Бот уже онлайн; повторите запрос после того, как /status покажет READY."
+    )
+    return False
+
+
 async def send_result(message: Message, path: Path, is_video: bool) -> None:
     try:
         if is_video:
@@ -70,7 +79,6 @@ async def send_result(message: Message, path: Path, is_video: bool) -> None:
         else:
             await message.answer_photo(FSInputFile(path), caption=f"Готово: <code>{path.name}</code>")
     except Exception:
-        # If Telegram does not accept the media as photo/video (codec/size/etc.), try as a document.
         await message.answer_document(FSInputFile(path), caption=f"Готово: <code>{path.name}</code>")
 
 
@@ -80,11 +88,14 @@ async def start_handler(message: Message) -> None:
         await message.answer("Доступ к боту не разрешён.")
         return
     uid = message.from_user.id if message.from_user else 0
+    ready = await client.ping()
     await message.answer(
-        "Готов к работе.\n\n"
+        "Бот онлайн.\n\n"
         "• <b>Текст</b> → картинка.\n"
         "• <b>Фото + подпись</b> → видео из фотографии по описанию сцены.\n"
-        "• /id → показать ваш Telegram user ID.\n\n"
+        "• /status → состояние ComfyUI.\n"
+        "• /id → ваш Telegram user ID.\n\n"
+        f"ComfyUI: <b>{'READY' if ready else 'BOOTSTRAP'}</b>\n"
         f"Ваш ID: <code>{uid}</code>"
     )
 
@@ -101,7 +112,7 @@ async def status_handler(message: Message) -> None:
         await message.answer("Доступ к боту не разрешён.")
         return
     ok = await client.ping()
-    await message.answer("ComfyUI: <b>READY</b>" if ok else "ComfyUI пока не отвечает.")
+    await message.answer("ComfyUI: <b>READY</b>" if ok else "ComfyUI: <b>BOOTSTRAP</b> — модели ещё готовятся.")
 
 
 @dp.message(F.photo)
@@ -115,6 +126,8 @@ async def photo_handler(message: Message) -> None:
         return
     if BLOCK_NSFW_PHOTO and contains_explicit(prompt):
         await message.answer("Сексуализированную генерацию по фотографии реального человека этот канал не запускает. Используйте нейтральное описание сцены.")
+        return
+    if not await comfy_ready(message):
         return
 
     status = await message.answer("Фото получено. Жду свободный GPU-слот…")
@@ -160,6 +173,8 @@ async def text_handler(message: Message) -> None:
     prompt = (message.text or "").strip()
     if not prompt or prompt.startswith("/"):
         return
+    if not await comfy_ready(message):
+        return
 
     status = await message.answer("Запрос получен. Жду свободный GPU-слот…")
     async with QUEUE_LOCK:
@@ -186,7 +201,8 @@ async def main() -> None:
     BOT_DATA_DIR.mkdir(parents=True, exist_ok=True)
     DOWNLOAD_DIR.mkdir(parents=True, exist_ok=True)
     INPUT_ROOT.mkdir(parents=True, exist_ok=True)
-    log.info("Telegram bot started; ComfyUI=%s; workflows=%s", COMFY_API, WORKFLOWS_DIR)
+    me = await bot.get_me()
+    log.info("Telegram bot started: @%s id=%s; ComfyUI=%s; workflows=%s", me.username, me.id, COMFY_API, WORKFLOWS_DIR)
     await dp.start_polling(bot)
 
 
