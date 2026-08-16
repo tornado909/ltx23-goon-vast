@@ -1,5 +1,7 @@
 FROM vastai/pytorch:cuda-12.8.1-auto
 
+ARG BUILD_SHA=unknown
+
 USER root
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
@@ -13,7 +15,10 @@ ENV DEBIAN_FRONTEND=noninteractive \
     OPEN_BUTTON_TOKEN=1 \
     PORTAL_CONFIG="localhost:1111:11111:/:Instance Portal|localhost:8188:18188:/:ComfyUI" \
     OLLAMA_HOST=127.0.0.1:11434 \
-    OLLAMA_KEEP_ALIVE=0s
+    OLLAMA_KEEP_ALIVE=0s \
+    LTX_BUILD_SHA=${BUILD_SHA}
+
+LABEL org.opencontainers.image.revision=${BUILD_SHA}
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
       git git-lfs ffmpeg curl ca-certificates aria2 unzip jq procps \
@@ -44,6 +49,7 @@ RUN curl -fsSL https://ollama.com/install.sh | sh
 COPY . /opt/ltx-suite
 COPY docker/ltx-suite.conf /etc/supervisor/conf.d/ltx-suite.conf
 RUN chmod +x /opt/ltx-suite/docker/start.sh \
+    && test -s /etc/supervisor/conf.d/ltx-suite.conf \
     && /venv/main/bin/python /opt/ltx-suite/scripts/validate_project.py
 
 EXPOSE 1111/tcp 8188/tcp
